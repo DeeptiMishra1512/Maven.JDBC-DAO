@@ -7,7 +7,7 @@ public class App {
 
         // Create
         DTOClass newCar = new DTOClass(0, "Hyundai", "Elantra", 2022, "Gray", "1HGCM82633A444444");
-        newCar = carDAO.create(newCar);
+        DTOClass newCarSaved = carDAO.create(newCar);
         System.out.println("Created: " + newCar);
 
         // Find All
@@ -15,7 +15,8 @@ public class App {
         System.out.println("All Cars: " + cars);
 
         // Find By ID
-        DTOClass car = carDAO.findById(newCar.getId());
+        System.out.println("Found by ID: " + newCarSaved.getId());
+        DTOClass car = carDAO.findById(newCarSaved.getId());
         System.out.println("Found by ID: " + car);
 
         // Update

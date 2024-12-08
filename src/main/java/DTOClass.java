@@ -5,11 +5,11 @@ public class DTOClass implements DTOInterface{
     private int id =0;
     private String makeOfCar = null;
     private String modelOfCar = null;
-    private Date yearOfMake = null;
+    private Integer yearOfMake = null;
     private String colorOfCar = null;
     private String vinNumber = null;
 
-    public DTOClass(int id, String makeOfCar, String modelOfCar, Date yearOfMake, String colorOfCar, String vinNumber) {
+    public DTOClass(int id, String makeOfCar, String modelOfCar, Integer yearOfMake, String colorOfCar, String vinNumber) {
         this.id = id;
         this.makeOfCar = makeOfCar;
         this.modelOfCar = modelOfCar;
@@ -18,7 +18,7 @@ public class DTOClass implements DTOInterface{
         this.vinNumber = vinNumber;
     }
 
-    public DTOClass(String makeOfCar, String modelOfCar, Date yearOfMake, String colorOfCar, String vinNumber) {
+    public DTOClass(String makeOfCar, String modelOfCar, Integer yearOfMake, String colorOfCar, String vinNumber) {
         this.makeOfCar = makeOfCar;
         this.modelOfCar = modelOfCar;
         this.yearOfMake = yearOfMake;
@@ -32,7 +32,7 @@ public class DTOClass implements DTOInterface{
 
     @Override
     public int getId() {
-        return 0;
+        return id;
     }
 
     public void setId(int id) {
@@ -55,11 +55,11 @@ public class DTOClass implements DTOInterface{
         this.modelOfCar = modelOfCar;
     }
 
-    public Date getYearOfMake() {
+    public Integer getYearOfMake() {
         return yearOfMake;
     }
 
-    public void setYearOfMake(Date yearOfMake) {
+    public void setYearOfMake(Integer yearOfMake) {
         this.yearOfMake = yearOfMake;
     }
 
@@ -77,5 +77,17 @@ public class DTOClass implements DTOInterface{
 
     public void setVinNumber(String vinNumber) {
         this.vinNumber = vinNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "DTOClass{" +
+                "id=" + id +
+                ", makeOfCar='" + makeOfCar + '\'' +
+                ", modelOfCar='" + modelOfCar + '\'' +
+                ", yearOfMake=" + yearOfMake +
+                ", colorOfCar='" + colorOfCar + '\'' +
+                ", vinNumber='" + vinNumber + '\'' +
+                '}';
     }
 }

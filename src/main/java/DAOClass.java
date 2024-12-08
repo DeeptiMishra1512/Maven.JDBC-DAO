@@ -16,12 +16,12 @@ public class DAOClass implements DAOInterface {
     private DTOClass extractCarDetailsFromResultSet(ResultSet rs) throws SQLException {
         DTOClass cars = new DTOClass();
 
-        cars.setId( rs.getInt("Id") );
+        cars.setId( rs.getInt("id") );
         cars.setMakeOfCar( rs.getString("Make") );
         cars.setModelOfCar( rs.getString("Model") );
-        cars.setYearOfMake( rs.getDate("Year") );
+        cars.setYearOfMake( rs.getInt("year") );
         cars.setColorOfCar(rs.getString("Color"));
-        cars.setVinNumber(rs.getString("Vin Number"));
+        cars.setVinNumber(rs.getString("Vin"));
 
         return cars;
     }
@@ -92,7 +92,7 @@ public class DAOClass implements DAOInterface {
 
             ps.setString(1, car.getMakeOfCar());
             ps.setString(2, car.getModelOfCar());
-            ps.setDate(3, new Date(car.getYearOfMake()));
+            ps.setInt(3, car.getYearOfMake());
             ps.setString(4, car.getColorOfCar());
             ps.setString(5, car.getVinNumber());
             ps.setInt(6, car.getId());
@@ -168,7 +168,7 @@ public class DAOClass implements DAOInterface {
 
             ps.setString(1, car.getMakeOfCar());
             ps.setString(2, car.getModelOfCar());
-            ps.setDate(3, new java.sql.Date(car.getYearOfMake().getTime()));
+            ps.setInt(3, car.getYearOfMake());
             ps.setString(4, car.getColorOfCar());
             ps.setString(5, car.getVinNumber());
 
