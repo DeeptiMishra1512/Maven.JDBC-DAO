@@ -1,8 +1,6 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class DAOClass implements DAOInterface {
 /* Fields used to set car
@@ -29,65 +27,189 @@ public class DAOClass implements DAOInterface {
     }
 
     @Override
-    public Object findById(int id) {
+    public DTOClass findById(int id) {
 
        // ConnectionFactory connector = new ConnectionFactory();
         Connection connection = ConnectionFactory.getConnection();
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM car WHERE id=" + id);
+            String query = "SELECT * FROM car WHERE id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
 
-            if(rs.next())
-            {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
                 return extractCarDetailsFromResultSet(rs);
             }
-
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-
         return null;
     }
 
     @Override
-    public List findAll() {
+    public List<DTOClass> findAll() {
 
        // ConnectionFactory connector = new ConnectionFactory();
         Connection connection = ConnectionFactory.getConnection();
+        List<DTOClass> cars = new ArrayList<>();
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM car");
+            String query = "SELECT * FROM car";
+            PreparedStatement stmt = connection.prepareStatement(query);
 
-            List users = new ArrayList();
-
-            while(rs.next())
-            {
-                DTOClass car = extractCarDetailsFromResultSet(rs);
-                users.add(car);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                cars.add(extractCarDetailsFromResultSet(rs));
             }
-
-            return users;
-
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-        return null;
+        return cars;
 
      //   return Collections.emptyList();
     }
 
+
+
     @Override
-    public Object update(Object dto) {
+    public DTOClass update(Object dto) {
+        DTOClass car = (DTOClass) dto;
+        Connection connection = ConnectionFactory.getConnection();
+        try {
+            String query = "UPDATE car SET make = ?, model = ?, year = ?, color = ?, vin = ? WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, car.getMakeOfCar());
+            ps.setString(2, car.getModelOfCar());
+            ps.setDate(3, new Date(car.getYearOfMake()));
+            ps.setString(4, car.getColorOfCar());
+            ps.setString(5, car.getVinNumber());
+            ps.setInt(6, car.getId());
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                return car;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
         return null;
     }
 
+
+
+    /*
     @Override
-    public Object create(Object dto) {
+    public Object update(DTOClass dto) {
+        //extractCarDetailsFromResultSet
+      //  ConnectionFactory connector = new ConnectionFactory();
+        /* Fields used to set car
+
+    private int id =0;
+    private String makeOfCar = null;
+    private String modelOfCar = null;
+    private Date yearOfMake = null;
+    private String colorOfCar = null;
+    private String vinNumber = null;
+
+  */
+
+
+ /*
+        Connection connection = ConnectionFactory.getConnection();
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE car SET Make=?, Model=?, year=? ,Color =?, Vin=? WHERE id=?");
+            ps.setString(1, dto.getMakeOfCar());
+            ps.setString(2, dto.getModelOfCar());
+            ps.setDate(3, dto.getYearOfMake());
+            ps.setString(4, user.getId());
+            ps.setString(5, user.getId());
+            int i = ps.executeUpdate();
+
+            if(i == 1) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+
+    }
+*/
+
+
+    @Override
+    public DTOClass create(Object dto) {
+
+        DTOClass car = (DTOClass) dto;
+        Connection connection = ConnectionFactory.getConnection();
+        try {
+            String query = "INSERT INTO car (make, model, year, color, vin) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, car.getMakeOfCar());
+            ps.setString(2, car.getModelOfCar());
+            ps.setDate(3, new java.sql.Date(car.getYearOfMake().getTime()));
+            ps.setString(4, car.getColorOfCar());
+            ps.setString(5, car.getVinNumber());
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    car.setId(rs.getInt(1));
+                }
+                return car;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
         return null;
     }
 
     @Override
     public void delete(int id) {
+        Connection connection = ConnectionFactory.getConnection();
+        try {
+            String query = "DELETE FROM car WHERE id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
 
     }
+}
 }

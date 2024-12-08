@@ -9,7 +9,10 @@ public interface DAOInterface<T> {
 
        public List<T> findAll();
        public T update(T dto);
-       public T create(T dto);
+
+   // Object update(DTOClass dto);
+
+    public T create(T dto);
        public  void delete(int id);
 
 
